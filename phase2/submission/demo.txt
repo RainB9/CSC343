@@ -1,0 +1,232 @@
+Script started on 2021-11-18 16:25:52-0500
+]0;baoyuanz@dbsrv1:/h/u13/c9/00/baoyuanz/csc343projectdbsrv1:~/csc343project$ psql csc343h-baoyuanz
+psql (10.19 (Ubuntu 10.19-0ubuntu0.18.04.1), server 10.18 (Ubuntu 10.18-0ubuntu0.18.04.1))
+Type "help" for help.
+
+csc343h-baoyuanz=> \i schema.ddl
+psql:schema.ddl:4: NOTICE:  drop cascades to 5 other objects
+DETAIL:  drop cascades to table project.country
+drop cascades to table project.population
+drop cascades to table project.daily_cases
+drop cascades to table project.vaccination
+drop cascades to table project.phsm
+DROP SCHEMA
+CREATE SCHEMA
+SET
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+csc343h-baoyuanz=> \i data.sql
+SET
+psql:data.sql:3: NOTICE:  table "temppopulation" does not exist, skipping
+DROP TABLE
+psql:data.sql:4: NOTICE:  table "tempdaily" does not exist, skipping
+DROP TABLE
+psql:data.sql:5: NOTICE:  table "tempvacc" does not exist, skipping
+DROP TABLE
+psql:data.sql:6: NOTICE:  table "tempphsm" does not exist, skipping
+DROP TABLE
+COPY 244
+CREATE TABLE
+COPY 264
+INSERT 0 211
+DROP TABLE
+CREATE TABLE
+COPY 162345
+INSERT 0 156180
+DROP TABLE
+CREATE TABLE
+COPY 205
+INSERT 0 202
+DROP TABLE
+CREATE TABLE
+COPY 157482
+INSERT 0 152098
+DROP TABLE
+csc343h-baoyuanz=> [Kcsc343h-baoyuanz=> \d Country
+               Table "project.country"
+    Column    | Type | Collation | Nullable | Default 
+--------------+------+-----------+----------+---------
+ country_name | text |           | not null | 
+ alpha2_code  | text |           | not null | 
+ alpha3_code  | text |           | not null | 
+Indexes:
+    "country_pkey" PRIMARY KEY, btree (country_name)
+    "country_alpha2_code_key" UNIQUE CONSTRAINT, btree (alpha2_code)
+    "country_alpha3_code_key" UNIQUE CONSTRAINT, btree (alpha3_code)
+Referenced by:
+    TABLE "daily_cases" CONSTRAINT "daily_cases_country_code2_fkey" FOREIGN KEY (country_code2) REFERENCES country(alpha2_code)
+    TABLE "phsm" CONSTRAINT "phsm_country_code3_fkey" FOREIGN KEY (country_code3) REFERENCES country(alpha3_code)
+    TABLE "population" CONSTRAINT "population_country_code3_fkey" FOREIGN KEY (country_code3) REFERENCES country(alpha3_code)
+    TABLE "vaccination" CONSTRAINT "vaccination_country_code3_fkey" FOREIGN KEY (country_code3) REFERENCES country(alpha3_code)
+
+csc343h-baoyuanz=> \d Population
+                Table "project.population"
+     Column      |  Type  | Collation | Nullable | Default 
+-----------------+--------+-----------+----------+---------
+ country_code3   | text   |           | not null | 
+ population_2020 | bigint |           |          | 
+Indexes:
+    "population_pkey" PRIMARY KEY, btree (country_code3)
+Foreign-key constraints:
+    "population_country_code3_fkey" FOREIGN KEY (country_code3) REFERENCES country(alpha3_code)
+
+csc343h-baoyuanz=> \d Daily_cases
+               Table "project.daily_cases"
+    Column     |  Type   | Collation | Nullable | Default 
+---------------+---------+-----------+----------+---------
+ date          | date    |           | not null | 
+ country_code2 | text    |           | not null | 
+ new_cases     | integer |           | not null | 
+ new_death     | integer |           | not null | 
+Indexes:
+    "daily_cases_pkey" PRIMARY KEY, btree (date, country_code2)
+Foreign-key constraints:
+    "daily_cases_country_code2_fkey" FOREIGN KEY (country_code2) REFERENCES country(alpha2_code)
+
+csc343h-baoyuanz=> \d Vaccination
+                              Table "project.vaccination"
+         Column          |            Type             | Collation | Nullable | Default 
+-------------------------+-----------------------------+-----------+----------+---------
+ country_code3           | text                        |           | not null | 
+ who_region              | text                        |           | not null | 
+ total_vacc              | bigint                      |           | not null | 
+ people_fully_vaccinated | integer                     |           | not null | 
+ first_vaccine_date      | timestamp without time zone |           | not null | 
+Indexes:
+    "vaccination_pkey" PRIMARY KEY, btree (country_code3)
+Check constraints:
+    "vaccination_who_region_check" CHECK (who_region = ANY (ARRAY['AFRO'::text, 'AMRO'::text, 'SEARO'::text, 'EURO'::text, 'EMRO'::text, 'WPRO'::text]))
+Foreign-key constraints:
+    "vaccination_country_code3_fkey" FOREIGN KEY (country_code3) REFERENCES country(alpha3_code)
+
+csc343h-baoyuanz=> \d PHSM;
+                     Table "project.phsm"
+      Column       |  Type   | Collation | Nullable | Default 
+-------------------+---------+-----------+----------+---------
+ date              | date    |           | not null | 
+ country_code3     | text    |           | not null | 
+ masks             | integer |           | not null | 
+ travel            | integer |           | not null | 
+ gatherings        | integer |           | not null | 
+ schools           | integer |           | not null | 
+ business          | integer |           | not null | 
+ movements         | integer |           | not null | 
+ total_measurement | integer |           | not null | 
+Indexes:
+    "phsm_pkey" PRIMARY KEY, btree (date, country_code3)
+Foreign-key constraints:
+    "phsm_country_code3_fkey" FOREIGN KEY (country_code3) REFERENCES country(alpha3_code)
+
+csc343h-baoyuanz=> select count(*) from Country;
+ count 
+-------
+   244
+(1 row)
+
+csc343h-baoyuanz=> select count(*) from Population;
+ count 
+-------
+   211
+(1 row)
+
+csc343h-baoyuanz=> select count(*) from Daily_cases;
+ count  
+--------
+ 156180
+(1 row)
+
+csc343h-baoyuanz=> select count(*) from Vaccination;
+ count 
+-------
+   202
+(1 row)
+
+csc343h-baoyuanz=> select count(*) from PHSM;
+ count  
+--------
+ 152098
+(1 row)
+
+csc343h-baoyuanz=> select * from Country Limit 10;
+   country_name    | alpha2_code | alpha3_code 
+-------------------+-------------+-------------
+ Afghanistan       | AF          | AFG
+ Albania           | AL          | ALB
+ Algeria           | DZ          | DZA
+ AmericanSamoa     | AS          | ASM
+ Andorra           | AD          | AND
+ Angola            | AO          | AGO
+ Anguilla          | AI          | AIA
+ Antarctica        | AQ          | ATA
+ AntiguaandBarbuda | AG          | ATG
+ Argentina         | AR          | ARG
+(10 rows)
+
+csc343h-baoyuanz=> select * from Population Limit 10;
+ country_code3 | population_2020 
+---------------+-----------------
+ ABW           |          106766
+ AFG           |        38928341
+ AGO           |        32866268
+ ALB           |         2837743
+ AND           |           77265
+ ARE           |         9890400
+ ARG           |        45376763
+ ARM           |         2963234
+ ASM           |           55197
+ ATG           |           97928
+(10 rows)
+
+csc343h-baoyuanz=> select * from Daily_cases Limit 10;
+    date    | country_code2 | new_cases | new_death 
+------------+---------------+-----------+-----------
+ 2020-01-03 | AF            |         0 |         0
+ 2020-01-04 | AF            |         0 |         0
+ 2020-01-05 | AF            |         0 |         0
+ 2020-01-06 | AF            |         0 |         0
+ 2020-01-07 | AF            |         0 |         0
+ 2020-01-08 | AF            |         0 |         0
+ 2020-01-09 | AF            |         0 |         0
+ 2020-01-10 | AF            |         0 |         0
+ 2020-01-11 | AF            |         0 |         0
+ 2020-01-12 | AF            |         0 |         0
+(10 rows)
+
+csc343h-baoyuanz=> select * from Vaccination Limit 10;
+ country_code3 | who_region | total_vacc | people_fully_vaccinated | first_vaccine_date  
+---------------+------------+------------+-------------------------+---------------------
+ AFG           | EMRO       |    4018197 |                 3188609 | 2021-02-22 00:00:00
+ ALB           | EURO       |    1943760 |                  906491 | 2021-01-13 00:00:00
+ DZA           | AFRO       |   11376816 |                 4930443 | 2021-01-30 00:00:00
+ ASM           | WPRO       |      65535 |                   30862 | 2020-12-21 00:00:00
+ AND           | EURO       |     104534 |                   49535 | 2021-01-20 00:00:00
+ AGO           | AFRO       |    7806481 |                 2003907 | 2021-03-10 00:00:00
+ AIA           | AMRO       |      18782 |                    9158 | 2021-02-05 00:00:00
+ ATG           | AMRO       |     111186 |                   52689 | 2021-02-19 00:00:00
+ ARG           | AMRO       |   63030961 |                27090784 | 2020-12-29 00:00:00
+ ARM           | EURO       |     831856 |                  252496 | 2021-06-16 00:00:00
+(10 rows)
+
+csc343h-baoyuanz=> Select * from PHSM Limit 10;
+    date    | country_code3 | masks | travel | gatherings | schools | business | movements | total_measurement 
+------------+---------------+-------+--------+------------+---------+----------+-----------+-------------------
+ 2020-08-20 | YEM           |     0 |     67 |         30 |      25 |       13 |        80 |                36
+ 2020-09-04 | BLR           |    67 |     67 |         25 |      25 |       13 |       100 |                50
+ 2021-03-13 | EGY           |   100 |     83 |         50 |      25 |       33 |        20 |                52
+ 2020-10-18 | UZB           |   100 |     83 |         25 |      25 |       67 |        80 |                63
+ 2021-04-18 | FIN           |    33 |     83 |          5 |      25 |       33 |        20 |                33
+ 2020-02-24 | IMN           |     0 |      0 |          0 |       0 |        0 |         0 |                 0
+ 2020-03-22 | MLI           |     0 |      0 |          0 |      25 |        0 |         0 |                 4
+ 2020-12-31 | MYS           |   100 |     83 |          5 |      80 |       80 |        20 |                61
+ 2020-04-10 | GUF           |     0 |     50 |          0 |      25 |        0 |        80 |                26
+ 2020-05-08 | IRN           |     0 |     50 |         25 |       0 |       47 |        40 |                27
+(10 rows)
+
+csc343h-baoyuanz=> \q
+]0;baoyuanz@dbsrv1:/h/u13/c9/00/baoyuanz/csc343projectdbsrv1:~/csc343project$ exit
+exit
+
+Script done on 2021-11-18 16:29:36-0500

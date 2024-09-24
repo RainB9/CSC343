@@ -1,0 +1,174 @@
+Script started on 2021-12-01 12:28:29-0500
+]0;baoyuanz@dbsrv1:/h/u13/c9/00/baoyuanz/csc343projectdbsrv1:~/csc343project$ psql csc34[K3[K43h-baoyuanz
+psql (10.19 (Ubuntu 10.19-0ubuntu0.18.04.1), server 10.18 (Ubuntu 10.18-0ubuntu0.18.04.1))
+Type "help" for help.
+
+csc343h-baoyuanz=> \i queries-runner.txt
+-------------------- Loading schema and data: --------------------
+
+psql:schema.ddl:4: NOTICE:  drop cascades to 5 other objects
+DETAIL:  drop cascades to table country
+drop cascades to table population
+drop cascades to table daily_cases
+drop cascades to table vaccination
+drop cascades to table phsm
+DROP SCHEMA
+CREATE SCHEMA
+SET
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+SET
+psql:data.sql:3: NOTICE:  table "temppopulation" does not exist, skipping
+DROP TABLE
+psql:data.sql:4: NOTICE:  table "tempdaily" does not exist, skipping
+DROP TABLE
+psql:data.sql:5: NOTICE:  table "tempvacc" does not exist, skipping
+DROP TABLE
+psql:data.sql:6: NOTICE:  table "tempphsm" does not exist, skipping
+DROP TABLE
+COPY 244
+CREATE TABLE
+COPY 264
+INSERT 0 211
+DROP TABLE
+CREATE TABLE
+COPY 162345
+INSERT 0 156180
+DROP TABLE
+CREATE TABLE
+COPY 205
+INSERT 0 202
+DROP TABLE
+CREATE TABLE
+COPY 157482
+INSERT 0 152098
+DROP TABLE
+
+-------------------- Investigative Question 1: ------------------
+
+SET
+psql:q1.sql:2: NOTICE:  table "fullyvac" does not exist, skipping
+DROP TABLE
+psql:q1.sql:3: NOTICE:  table "regionvacrate" does not exist, skipping
+DROP TABLE
+psql:q1.sql:4: NOTICE:  table "initial_populationcase" does not exist, skipping
+DROP TABLE
+psql:q1.sql:5: NOTICE:  table "final_populationcase" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+psql:q1.sql:37: NOTICE:  view "answer" does not exist, skipping
+DROP VIEW
+psql:q1.sql:38: NOTICE:  view "answerwithchange" does not exist, skipping
+DROP VIEW
+psql:q1.sql:39: NOTICE:  view "final" does not exist, skipping
+DROP VIEW
+CREATE VIEW
+CREATE VIEW
+CREATE VIEW
+INSERT 0 1672
+UPDATE 209
+INSERT 0 1672
+DROP TABLE
+psql:q1.sql:81: NOTICE:  view "vaccwithpop" does not exist, skipping
+DROP VIEW
+CREATE VIEW
+INSERT 0 193
+INSERT 0 6
+ country_name | quarter | years | quarter_cases | quarter_change 
+--------------+---------+-------+---------------+----------------
+ Afghanistan  |       1 |  2020 |           166 |              0
+ Afghanistan  |       2 |  2020 |         31279 |          31113
+ Afghanistan  |       3 |  2020 |          7909 |         -23370
+ Afghanistan  |       4 |  2020 |         12976 |           5067
+ Afghanistan  |       1 |  2021 |          4124 |          -8852
+(5 rows)
+
+ country_name |      percent       
+--------------+--------------------
+ Aruba        |  0.723797838263117
+ Afghanistan  |  0.081909706863696
+ Angola       | 0.0609715407906976
+ Albania      |  0.319440837313316
+ Andorra      |  0.641105286999288
+(5 rows)
+
+ who_region |  vaccination_rate  
+------------+--------------------
+ EURO       |  0.538695595554926
+ WPRO       |  0.671145126195836
+ AMRO       |  0.544569699392108
+ AFRO       | 0.0454910675201736
+ EMRO       |   0.25338964527701
+(5 rows)
+
+
+-------------------- Investigative Question 2: ------------------
+
+SET
+psql:q2.sql:2: NOTICE:  table "vaccwithdaily" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+DROP VIEW
+CREATE VIEW
+psql:q2.sql:24: NOTICE:  view "dailybeforevac" does not exist, skipping
+DROP VIEW
+CREATE VIEW
+psql:q2.sql:35: NOTICE:  view "dailyaftervac" does not exist, skipping
+DROP VIEW
+CREATE VIEW
+psql:q2.sql:46: NOTICE:  view "vaccanddaily" does not exist, skipping
+DROP VIEW
+CREATE VIEW
+psql:q2.sql:54: NOTICE:  view "addchange" does not exist, skipping
+DROP VIEW
+CREATE VIEW
+INSERT 0 193
+ country_name |   vaccpercentage   | total_before_vac | total_after_vac | diff  
+--------------+--------------------+------------------+-----------------+-------
+ Aruba        |  0.723797838263117 |             7413 |            8676 |  1263
+ Afghanistan  |  0.081909706863696 |            55604 |          101045 | 45441
+ Angola       | 0.0609715407906976 |            21108 |           43832 | 22724
+ Albania      |  0.319440837313316 |            63971 |          129885 | 65914
+ Andorra      |  0.641105286999288 |             9083 |            6846 | -2237
+(5 rows)
+
+
+-------------------- Investigative Question 2: ------------------
+
+SET
+psql:q3.sql:2: NOTICE:  table "casesandphsm" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+psql:q3.sql:22: NOTICE:  view "cleanedphsm" does not exist, skipping
+DROP VIEW
+psql:q3.sql:23: NOTICE:  view "timeperiod" does not exist, skipping
+DROP VIEW
+psql:q3.sql:24: NOTICE:  view "casesbetween" does not exist, skipping
+DROP VIEW
+CREATE VIEW
+CREATE VIEW
+CREATE VIEW
+INSERT 0 4742
+[?1049h[22;0;0t[?1h= country_name | country_code3 | avg_new_cases | avg_new_death | start_date |  end_date  | masks | travel | gatherings  | schools | business | movements | total_measurement 
+--------------+---------------+---------------+---------------+------------+------------+-------+--------+----------- -+---------+----------+-----------+-------------------
+ Afghanistan  | AFG           |             0 |             0 | 2020-01-01 | 2020-01-27 |     0 |      0 |          0  |       0 |        0 |         0 |                 0
+ Afghanistan  | AFG           |           0.5 |             0 | 2020-01-27 | 2020-03-18 |     0 |     50 |          0  |       0 |        0 |         0 |                 8
+ Afghanistan  | AFG           |             6 |         0.125 | 2020-03-18 | 2020-03-25 |     0 |     50 |         25  |       0 |        0 |         0 |                12
+ Afghanistan  | AFG           |          14.4 |           0.6 | 2020-03-25 | 2020-03-29 |     0 |     50 |         25  |       0 |        0 |        80 |                26
+ Afghanistan  | AFG           |             4 |             1 | 2020-03-29 | 2020-03-30 |    33 |     50 |         25  |       0 |        0 |        80 |                31
+(5 rows)
+
+[7m(END)[27m[K[K[7m(END)[27m[K[K[?1l>[?1049l[23;0;0tcsc343h-baoyuanz=> done
+csc343h-baoyuanz-> \q
+]0;baoyuanz@dbsrv1:/h/u13/c9/00/baoyuanz/csc343projectdbsrv1:~/csc343project$ done
+bash: syntax error near unexpected token `done'
+]0;baoyuanz@dbsrv1:/h/u13/c9/00/baoyuanz/csc343projectdbsrv1:~/csc343project$ exit
+exit
+
+Script done on 2021-12-01 12:29:17-0500

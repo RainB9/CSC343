@@ -1,0 +1,180 @@
+cdf> psql csc343h-dianeh
+psql (10.19 (Ubuntu 10.19-0ubuntu0.18.04.1), server 10.18 (Ubuntu 10.18-0ubuntu0.18.04.1))
+Type "help" for help.
+
+--- (a) Load schema and data --------------------------------------------------
+
+csc343h-dianeh=> \i coursesDDL.txt 
+psql:coursesDDL.txt:7: NOTICE:  drop cascades to 9 other objects
+DETAIL:  drop cascades to type university.grade
+drop cascades to type university.cgpa
+drop cascades to type university.campus
+drop cascades to type university.department
+drop cascades to table university.student
+drop cascades to table university.course
+drop cascades to table university.offering
+drop cascades to table university.took
+drop cascades to table university.winners
+DROP SCHEMA
+CREATE SCHEMA
+SET
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+csc343h-dianeh=> \i coursesData.sql 
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+... [Additional lines, all the same, omitted]
+INSERT 0 1
+
+--- (b) Run \d on each table --------------------------------------------------
+
+csc343h-dianeh=> \d course
+                    Table "university.course"
+ Column  |         Type          | Collation | Nullable | Default 
+---------+-----------------------+-----------+----------+---------
+ cnum    | integer               |           | not null | 
+ name    | character varying(40) |           | not null | 
+ dept    | department            |           | not null | 
+ breadth | boolean               |           |          | 
+Indexes:
+    "course_pkey" PRIMARY KEY, btree (cnum, dept)
+Referenced by:
+    TABLE "offering" CONSTRAINT "offering_cnum_fkey" FOREIGN KEY (cnum, dept) REFERENCES course(cnum, dept)
+
+csc343h-dianeh=> \d offering
+                     Table "university.offering"
+   Column   |         Type          | Collation | Nullable | Default 
+------------+-----------------------+-----------+----------+---------
+ oid        | integer               |           | not null | 
+ cnum       | integer               |           |          | 
+ dept       | department            |           |          | 
+ term       | integer               |           | not null | 
+ instructor | character varying(40) |           |          | 
+Indexes:
+    "offering_pkey" PRIMARY KEY, btree (oid)
+Foreign-key constraints:
+    "offering_cnum_fkey" FOREIGN KEY (cnum, dept) REFERENCES course(cnum, dept)
+Referenced by:
+    TABLE "took" CONSTRAINT "took_oid_fkey" FOREIGN KEY (oid) REFERENCES offering(oid)
+
+csc343h-dianeh=> \d student
+                     Table "university.student"
+  Column   |         Type          | Collation | Nullable | Default 
+-----------+-----------------------+-----------+----------+---------
+ sid       | integer               |           | not null | 
+ firstname | character varying(15) |           | not null | 
+ surname   | character varying(15) |           | not null | 
+ campus    | campus                |           |          | 
+ email     | character varying(25) |           |          | 
+ cgpa      | cgpa                  |           |          | 
+Indexes:
+    "student_pkey" PRIMARY KEY, btree (sid)
+Referenced by:
+    TABLE "took" CONSTRAINT "took_sid_fkey" FOREIGN KEY (sid) REFERENCES student(sid)
+
+csc343h-dianeh=> \d took
+              Table "university.took"
+ Column |  Type   | Collation | Nullable | Default 
+--------+---------+-----------+----------+---------
+ sid    | integer |           | not null | 
+ oid    | integer |           | not null | 
+ grade  | grade   |           |          | 
+Indexes:
+    "took_pkey" PRIMARY KEY, btree (sid, oid)
+Foreign-key constraints:
+    "took_oid_fkey" FOREIGN KEY (oid) REFERENCES offering(oid)
+    "took_sid_fkey" FOREIGN KEY (sid) REFERENCES student(sid)
+
+--- (c) Run SELECT coung(*) on each table -------------------------------------
+
+csc343h-dianeh=> select count(*) from course;
+ count 
+-------
+    18
+(1 row)
+
+csc343h-dianeh=> select count(*) from offering;
+ count 
+-------
+    36
+(1 row)
+
+csc343h-dianeh=> select count(*) from student;
+ count 
+-------
+     5
+(1 row)
+
+csc343h-dianeh=> select count(*) from took;
+ count 
+-------
+    54
+(1 row)
+
+
+--- (d) Show some rows from each table ----------------------------------------
+
+csc343h-dianeh=> select * from course where name < 'N';
+ cnum |           name            | dept | breadth 
+------+---------------------------+------+---------
+  343 | Intro to Databases        | CSC  | f
+  148 | Intro to Comp Sci         | CSC  | f
+  263 | Data Struct & Anal        | CSC  | f
+  320 | Intro to Visual Computing | CSC  | f
+  200 | Intro Archaeology         | ANT  | t
+  203 | Human Biol & Evol         | ANT  | f
+  216 | Marine Mammal Bio         | EEB  | f
+  263 | Compar Vert Anatomy       | EEB  | f
+  200 | Environmental Change      | ENV  | f
+  220 | Mediaeval Society         | HIS  | t
+  296 | Black Freedom             | HIS  | t
+  222 | COBOL programming         | CSC  | f
+(12 rows)
+
+csc343h-dianeh=> select * from offering where cnum > 300;
+ oid | cnum | dept | term  | instructor 
+-----+------+------+-------+------------
+   1 |  343 | CSC  | 20089 | Horton
+   2 |  343 | CSC  | 20089 | Truta
+   3 |  343 | CSC  | 20089 | Heap
+   4 |  320 | CSC  | 20089 | Jepson
+  17 |  320 | ENV  | 20089 | Suzuki
+  21 |  343 | CSC  | 20081 | Mylopoulos
+  22 |  343 | CSC  | 20081 | Mylopoulos
+  24 |  320 | CSC  | 20081 | Jepson
+(8 rows)
+
+csc343h-dianeh=> select * from student;
+  sid  | firstname |  surname   | campus |   email   | cgpa 
+-------+-----------+------------+--------+-----------+------
+ 99132 | Avery     | Marchmount | StG    | avery@cs  | 3.13
+ 98000 | William   | Fairgrieve | StG    | will@cs   | 4.00
+ 99999 | Afsaneh   | Ali        | UTSC   | aali@cs   | 2.98
+   157 | Leilani   | Lakemeyer  | UTM    | lani@cs   | 3.42
+ 11111 | Homer     | Simpson    | StG    | doh@gmail | 0.40
+(5 rows)
+
+csc343h-dianeh=> select * from took where grade > 95;
+  sid  | oid | grade 
+-------+-----+-------
+ 99132 |  16 |    98
+ 99132 |  11 |    99
+ 98000 |  13 |    98
+ 98000 |  39 |    97
+ 99999 |  11 |    99
+ 99999 |  13 |    99
+ 99999 |  16 |   100
+ 99999 |  22 |    96
+   157 |   1 |    99
+   157 |  14 |    98
+(10 rows)
+
+csc343h-dianeh=> 
